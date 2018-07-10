@@ -6,40 +6,38 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {loading: true,
+    this.state = {
       currentUser: {name: "Bob"},
       messages: [
       {
+        id: "1",
         username: "Bob",
         content: "Has anyone seen my marbles?",
       },
       {
+        id: "2",
         username: "Anonymous",
         content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
       }
       ]}
     }
 
-    componentDidMount() {
-      setTimeout(() => {
-        this.setState({loading:false});
-      }, 3000)
-    }
+    // componentDidMount() {
+    //   setTimeout(() => {
+    //     this.setState({loading:false});
+    //   }, 3000)
+    // }
 
 
 
     render() {
-      if (this.state.loading) {
-        return (<h1>Loading...</h1>);
-      } else {
+      return (
+        <div>
+        <MessageList messages = {this.state.messages}/>
+        <ChatBar currentUser = {this.state.currentUser} />
+        </div>
+        );
 
-        return (
-          <div>
-          <MessageList />
-          <ChatBar />
-          </div>
-          );
-      }
     }
   }
   export default App;
