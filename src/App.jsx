@@ -11,49 +11,41 @@ class App extends Component {
       messages: []
     }
     this.addNewMessage = this.addNewMessage.bind(this);
+    this.addNewUsername = this.addNewUsername.bind(this);
   }
 
-  // generateRandomString() {
-  //   let upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  //   let lower = upper.toLowerCase();
-  //   let digits = "0123456789";
-  //   let alphanum = upper + lower + digits;
-  //   let generatedString = "";
-
-  //   for (let i = 0; i < 6; ++i) {
-  //     generatedString += alphanum[Math.floor(Math.random() * alphanum.length)];
-  //   }
-  //   return generatedString;
-  // }
 
   addNewMessage(content, curUser) {
     const oldMessages = this.state.messages;
     const newMessage = {
-        // id:  this.generateRandomString(),
-        username: curUser,
-        content: content
-      };
-      this.socket.send(JSON.stringify(newMessage));
-      // const currentMessages = [... oldMessages, newMessage];
-      // this.setState({ messages: currentMessages});
+      // id:  this.generateRandomString(),
+      username: curUser,
+      content: content
+    };
+    this.socket.send(JSON.stringify(newMessage));
+    // const currentMessages = [... oldMessages, newMessage];
+    // this.setState({ messages: currentMessages});
+  }
+
+  addNewUsername(newUser) {
+    console.log(newUser);
+    this.setState({currentUser: {name: newUser}});
+  }
 
 
+
+  componentDidMount() {
+    console.log("componentDidMount <App />");
+    this.socket = new WebSocket("ws:localhost:3001");
+    this.socket.addEventListener('open', e => {
+      console.log("connected to server");
+    })
+
+    this.socket.onmessage = (event) => {
+      console.log(event.data);
+      let newMessageWithId = JSON.parse(event.data);
+      this.setState({ messages: this.state.messages.concat([newMessageWithId])});
     }
-
-
-
-    componentDidMount() {
-      console.log("componentDidMount <App />");
-      this.socket = new WebSocket("ws:localhost:3001");
-      this.socket.addEventListener('open', e => {
-        console.log("connected to server");
-      })
-
-      this.socket.onmessage = (event) => {
-        console.log(event.data);
-        let newMessageWithId = JSON.parse(event.data);
-        this.setState({ messages: this.state.messages.concat([newMessageWithId])});
-      }
       // setTimeout(() => {
       //   // console.log("Simulating incoming message");
       //   // // Add a new message to the list of messages in the data store
@@ -71,7 +63,7 @@ class App extends Component {
       return (
         <div>
         <MessageList messages = {this.state.messages}/>
-        <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage} />
+        <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
         </div>
         );
 
