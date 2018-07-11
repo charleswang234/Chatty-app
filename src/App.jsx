@@ -56,7 +56,6 @@ class App extends Component {
         const messages = this.state.messages.concat(newMessage)
         // Update the state of the app component.
         // Calling setState will trigger a call to render() in App and all child components.
-        console.log("hi");
         this.setState({messages: messages})
         console.log("bye");
       }, 3000);
