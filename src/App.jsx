@@ -23,6 +23,9 @@ class App extends Component {
       username: curUser,
       content: content
     };
+    if (newMessage.username === "" ) {
+      newMessage.username = "Anonymous";
+    }
     this.socket.send(JSON.stringify(newMessage));
     // const currentMessages = [... oldMessages, newMessage];
     // this.setState({ messages: currentMessages});
@@ -30,9 +33,19 @@ class App extends Component {
 
   addNewUsername(newUser) {
     console.log(newUser);
+    // if the user did not change
+    if (this.state.currentUser.name === newUser) {
+      return;
+    }
     const data = {
       type: "postNotification",
       content: `${this.state.currentUser.name} has changed their name to ${newUser}`
+    }
+    if (this.state.currentUser.name === "") {
+      data.content = `Anonymous has changed their name to ${newUser}`;
+    }
+    if (newUser === "") {
+      data.content = `${this.state.currentUser.name} has changed their name to Anonymous`;
     }
     this.socket.send(JSON.stringify(data));
     this.setState({currentUser: {name: newUser}});

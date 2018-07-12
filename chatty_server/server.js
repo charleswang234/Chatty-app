@@ -33,6 +33,7 @@ wss.on('connection', (ws) => {
         break;
       case "postNotification":
         // handle incoming notification
+        data.id = uuid();
         data.type = "incomingNotification";
         break;
       default:
