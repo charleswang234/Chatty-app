@@ -9,7 +9,7 @@ class Message extends Component {
       case "incomingMessage":
         return (
         <div className="message">
-          <span className="message-username">{this.props.username}</span>
+          <span className="message-username" style={{color: this.props.userColour}}>{this.props.username}</span>
           <span className="message-content">{this.props.content}</span>
         </div>
         );

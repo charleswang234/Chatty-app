@@ -8,9 +8,10 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: ""},
+      currentUser: {name: "", colour: '#000000'},
       messages: [],
-      numberUsersOnline: 0
+      numberUsersOnline: 0,
+
     }
     this.addNewMessage = this.addNewMessage.bind(this);
     this.addNewUsername = this.addNewUsername.bind(this);
@@ -22,9 +23,11 @@ class App extends Component {
     const newMessage = {
       // id:  this.generateRandomString(),
       type: "postMessage",
-      username: curUser,
-      content: content
+      username: curUser.name,
+      content: content,
+      colour: curUser.colour
     };
+
     if (newMessage.username === "" ) {
       newMessage.username = "Anonymous";
     }
@@ -50,7 +53,7 @@ class App extends Component {
       data.content = `${this.state.currentUser.name} has changed their name to Anonymous`;
     }
     this.socket.send(JSON.stringify(data));
-    this.setState({currentUser: {name: newUser}});
+    this.setState({currentUser: {name: newUser, colour: this.state.currentUser.colour}});
   }
 
 
@@ -72,16 +75,21 @@ class App extends Component {
           // handle incoming message
           this.setState({ messages: this.state.messages.concat([data])});
           break;
-        case "incomingNotification":
+          case "incomingNotification":
           // handle incoming notification
           this.setState({messages: this.state.messages.concat([data])});
           break;
-        case "postUsersOnline":
+          case "postUsersOnline":
           // handle users online
           this.setState({numberUsersOnline: data.usersOnline});
           console.log("there are " + this.state.numberUsersOnline + " users online");
           break;
-        default:
+          case "postUserColour":
+          // handle the user's colour
+            this.setState({currentUser: {name: this.state.currentUser.name, colour: data.colour}});
+          // console.log(`${this.state.currentUser.colour}`);
+          break;
+          default:
           // show an error in the console if the message type is unknown
           throw new Error("Unknown event type " + data.type);
         }
@@ -95,7 +103,7 @@ class App extends Component {
     render() {
       return (
         <div>
-        <NavBar numberUsersOnline ={this.state.numberUsersOnline} />
+        <NavBar numberUsersOnline = {this.state.numberUsersOnline} />
         <MessageList messages = {this.state.messages}/>
         <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
         </div>

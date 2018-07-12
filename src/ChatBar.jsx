@@ -23,7 +23,7 @@ class ChatBar extends Component {
     const submitMessage = evt => {
       if (evt.key == "Enter") {
         const newMessageInput = evt.target;
-        this.props.addNewMessage(this.state.inputMessage, this.props.currentUser.name);
+        this.props.addNewMessage(this.state.inputMessage, this.props.currentUser);
         newMessageInput.value = "";
       }
     }

@@ -20,6 +20,19 @@ const wss = new SocketServer({ server });
 // store the userIDs as a set
 // const currentUsers = new Set([]);
 
+
+
+// generate a random colour
+function getRandomColour() {
+  var letters = '0123456789ABCDEF';
+  var colour = '#';
+  for (var i = 0; i < 6; i++) {
+    colour += letters[Math.floor(Math.random() * 16)];
+  }
+  return colour;
+}
+
+
 // broadcast to all current online users
 wss.broadcast = (data, ws) => {
   wss.clients.forEach(function each(client) {
@@ -36,11 +49,17 @@ wss.broadcast = (data, ws) => {
 wss.on('connection', (ws) => {
   console.log('Client connected');
   console.log(wss.clients.size);
+
+  // when first connected sends initial data
   const data = {
     type: "postUsersOnline",
     usersOnline: wss.clients.size
   };
-  wss.broadcast(data, ws);
+  // sends initial colour for current user
+  ws.send(JSON.stringify({type: "postUserColour", colour: getRandomColour()}));
+
+
+
   console.log(`one user enterleft, currently ${wss.clients.size} users`);
 
   ws.on('message', function incoming(message) {
