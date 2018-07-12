@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ChatBar from './ChatBar.jsx';
 import MessageList from './MessageList.jsx';
+import NavBar from './navBar.jsx';
 
 class App extends Component {
 
@@ -8,7 +9,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {name: ""},
-      messages: []
+      messages: [],
+      numberUsersOnline: 0
     }
     this.addNewMessage = this.addNewMessage.bind(this);
     this.addNewUsername = this.addNewUsername.bind(this);
@@ -74,6 +76,11 @@ class App extends Component {
           // handle incoming notification
           this.setState({messages: this.state.messages.concat([data])});
           break;
+        case "postUsersOnline":
+          // handle users online
+          this.setState({numberUsersOnline: data.usersOnline});
+          console.log("there are " + this.state.numberUsersOnline + " users online");
+          break;
         default:
           // show an error in the console if the message type is unknown
           throw new Error("Unknown event type " + data.type);
@@ -88,6 +95,7 @@ class App extends Component {
     render() {
       return (
         <div>
+        <NavBar numberUsersOnline ={this.state.numberUsersOnline} />
         <MessageList messages = {this.state.messages}/>
         <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
         </div>
