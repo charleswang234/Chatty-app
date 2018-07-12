@@ -17,6 +17,17 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+
+// broadcast to all current online users
+wss.broadcast = (data, ws) => {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+}
+
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
@@ -31,20 +42,16 @@ wss.on('connection', (ws) => {
         data.id = uuid();
         data.type = "incomingMessage";
         break;
-      case "postNotification":
+        case "postNotification":
         // handle incoming notification
         data.id = uuid();
         data.type = "incomingNotification";
         break;
-      default:
+        default:
         // show an error in the console if the message type is known
         throw new Error("Unknown data type " + data.type);
       }
-      wss.clients.forEach(function each(client) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(data));
-        }
-      });
+      wss.broadcast(data, ws);
     });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
