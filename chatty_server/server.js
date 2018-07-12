@@ -11,8 +11,8 @@ const PORT = 3001;
 // Create a new express server
 const server = express()
    // Make the express server serve static assets (html, javascript, css) from the /public folder
-  .use(express.static('public'))
-  .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on port ${ PORT }`));
+   .use(express.static('public'))
+   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on port ${ PORT }`));
 
 // Create the WebSockets server
 const wss = new SocketServer({ server });
@@ -24,16 +24,27 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
 
   ws.on('message', function incoming(message) {
-    const messageObj = JSON.parse(message);
-    messageObj.id = uuid();
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(messageObj));
+    const data = JSON.parse(message);
+    switch(data.type) {
+      case "postMessage":
+        // handle incoming message
+        data.id = uuid();
+        data.type = "incomingMessage";
+        break;
+      case "postNotification":
+        // handle incoming notification
+        data.type = "incomingNotification";
+        break;
+      default:
+        // show an error in the console if the message type is known
+        throw new Error("Unknown data type " + data.type);
       }
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(data));
+        }
+      });
     });
-
-    console.log(`User ${messageObj.username} said ${messageObj.content} ${messageObj.id}`);
-  });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => console.log('Client disconnected'));

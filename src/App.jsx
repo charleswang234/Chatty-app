@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: ""},
       messages: []
     }
     this.addNewMessage = this.addNewMessage.bind(this);
@@ -19,6 +19,7 @@ class App extends Component {
     const oldMessages = this.state.messages;
     const newMessage = {
       // id:  this.generateRandomString(),
+      type: "postMessage",
       username: curUser,
       content: content
     };
@@ -29,6 +30,11 @@ class App extends Component {
 
   addNewUsername(newUser) {
     console.log(newUser);
+    const data = {
+      type: "postNotification",
+      content: `${this.state.currentUser.name} has changed their name to ${newUser}`
+    }
+    this.socket.send(JSON.stringify(data));
     this.setState({currentUser: {name: newUser}});
   }
 
@@ -42,20 +48,27 @@ class App extends Component {
     })
 
     this.socket.onmessage = (event) => {
-      console.log(event.data);
-      let newMessageWithId = JSON.parse(event.data);
-      this.setState({ messages: this.state.messages.concat([newMessageWithId])});
-    }
-      // setTimeout(() => {
-      //   // console.log("Simulating incoming message");
-      //   // // Add a new message to the list of messages in the data store
-      //   // const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-      //   // const messages = this.state.messages.concat(newMessage)
-      //   // // Update the state of the app component.
-      //   // // Calling setState will trigger a call to render() in App and all child components.
-      //   // this.setState({messages: messages})
-      //   // console.log("bye");
-      // }, 3000);
+      console.log(event);
+      // The socket event data is encoded as a JSON string.
+      // This line turns it into an object
+      const data = JSON.parse(event.data);
+      switch(data.type) {
+        case "incomingMessage":
+          // handle incoming message
+          this.setState({ messages: this.state.messages.concat([data])});
+          break;
+        case "incomingNotification":
+          // handle incoming notification
+          this.setState({messages: this.state.messages.concat([data])});
+          break;
+        default:
+          // show an error in the console if the message type is unknown
+          throw new Error("Unknown event type " + data.type);
+        }
+
+
+      }
+
     }
 
 

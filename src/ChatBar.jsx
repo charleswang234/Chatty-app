@@ -2,15 +2,17 @@ import React, {Component} from 'react';
 
 class ChatBar extends Component {
   state={
-    "username": "Bob",
+    "username": "",
     "inputMessage": ""
   }
 
   changeUsername = (evt) => {
+    console.log(evt.target.value);
     this.setState({"username": evt.target.value});
   }
 
   changeMessage = (evt) => {
+    console.log(evt.target.value);
     this.setState({inputMessage: evt.target.value});
   }
 
@@ -21,7 +23,7 @@ class ChatBar extends Component {
     const submitMessage = evt => {
       if (evt.key == "Enter") {
         const newMessageInput = evt.target;
-        this.props.addNewMessage(newMessageInput.value, this.props.currentUser.name);
+        this.props.addNewMessage(this.state.inputMessage, this.props.currentUser.name);
         newMessageInput.value = "";
       }
     }
