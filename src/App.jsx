@@ -70,7 +70,10 @@ class App extends Component {
       // The socket event data is encoded as a JSON string.
       // This line turns it into an object
       const data = JSON.parse(event.data);
+      console.log("went through");
+      console.log(event.data);
       switch(data.type) {
+
         case "incomingMessage":
           // handle incoming message
           this.setState({ messages: this.state.messages.concat([data])});

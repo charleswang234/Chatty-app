@@ -55,12 +55,14 @@ wss.on('connection', (ws) => {
     type: "postUsersOnline",
     usersOnline: wss.clients.size
   };
+  wss.broadcast(data,ws);
+
   // sends initial colour for current user
   ws.send(JSON.stringify({type: "postUserColour", colour: getRandomColour()}));
 
 
 
-  console.log(`one user enterleft, currently ${wss.clients.size} users`);
+  console.log(`one user enter, currently ${wss.clients.size} users`);
 
   ws.on('message', function incoming(message) {
     const data = JSON.parse(message);
