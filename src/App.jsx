@@ -56,7 +56,13 @@ class App extends Component {
     this.setState({currentUser: {name: newUser, colour: this.state.currentUser.colour}});
   }
 
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  }
 
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
@@ -89,7 +95,7 @@ class App extends Component {
           break;
           case "postUserColour":
           // handle the user's colour
-            this.setState({currentUser: {name: this.state.currentUser.name, colour: data.colour}});
+          this.setState({currentUser: {name: this.state.currentUser.name, colour: data.colour}});
           // console.log(`${this.state.currentUser.colour}`);
           break;
           default:
@@ -108,7 +114,11 @@ class App extends Component {
         <div>
         <NavBar numberUsersOnline = {this.state.numberUsersOnline} />
         <MessageList messages = {this.state.messages}/>
+        <div style={{ float:"left", clear: "both" }}
+        ref={(el) => { this.messagesEnd = el; }}>
+        </div>
         <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
+
         </div>
         );
 
