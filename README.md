@@ -1,12 +1,11 @@
 # Chatty App
-=====================
 
 Chatty is a single-page chat app that uses ReactJS, HTML5, CSS, and JS in the front-end and Express, WebSockets, and Node in the back-end.
 
 ## Final Product
 
-!["Screenshot of Chatty page"]()
-!["Screenshot of Tweeter page after changing username"]()
+!["Screenshot of Chatty page"](Chatty-app/docs/start.png)
+!["Screenshot of Tweeter page after changing username"](Chatty-app/docs/withMessages.png)
 
 ## Getting Started
 
