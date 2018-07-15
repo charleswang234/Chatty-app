@@ -17,31 +17,30 @@ class App extends Component {
     this.addNewUsername = this.addNewUsername.bind(this);
   }
 
-
+  // creating a new message
   addNewMessage(content, curUser) {
     const oldMessages = this.state.messages;
     const newMessage = {
-      // id:  this.generateRandomString(),
       type: "postMessage",
       username: curUser.name,
       content: content,
       colour: curUser.colour
     };
 
+    // allows a user with no name to be anonymous
     if (newMessage.username === "" ) {
       newMessage.username = "Anonymous";
     }
     this.socket.send(JSON.stringify(newMessage));
-    // const currentMessages = [... oldMessages, newMessage];
-    // this.setState({ messages: currentMessages});
   }
 
   addNewUsername(newUser) {
     console.log(newUser);
-    // if the user did not change
+    // if the user did not change the username
     if (this.state.currentUser.name === newUser) {
       return;
     }
+
     const data = {
       type: "postNotification",
       content: `${this.state.currentUser.name} has changed their name to ${newUser}`
@@ -56,6 +55,7 @@ class App extends Component {
     this.setState({currentUser: {name: newUser, colour: this.state.currentUser.colour}});
   }
 
+  // allows the most present messages to be seen, automatically scrolls down the screen
   scrollToBottom = () => {
     this.messagesEnd.scrollIntoView({ behavior: "smooth" });
   }
@@ -102,26 +102,20 @@ class App extends Component {
           // show an error in the console if the message type is unknown
           throw new Error("Unknown event type " + data.type);
         }
-
-
       }
-
     }
-
 
     render() {
       return (
         <div>
-        <NavBar numberUsersOnline = {this.state.numberUsersOnline} />
-        <MessageList messages = {this.state.messages}/>
-        <div style={{ float:"left", clear: "both" }}
-        ref={(el) => { this.messagesEnd = el; }}>
+          <NavBar numberUsersOnline = {this.state.numberUsersOnline} />
+          <MessageList messages = {this.state.messages}/>
+          <div style={{ float:"left", clear: "both" }}
+            ref={(el) => { this.messagesEnd = el; }}>
+          </div>
+          <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
         </div>
-        <ChatBar currentUser = {this.state.currentUser} addNewMessage = {this.addNewMessage}  addNewUsername = {this.addNewUsername}/>
-
-        </div>
-        );
-
+      );
     }
   }
   export default App;

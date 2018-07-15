@@ -60,10 +60,7 @@ wss.on('connection', (ws) => {
   // sends initial colour for current user
   ws.send(JSON.stringify({type: "postUserColour", colour: getRandomColour()}));
 
-
-
-  console.log(`one user enter, currently ${wss.clients.size} users`);
-
+  // handing front-end
   ws.on('message', function incoming(message) {
     const data = JSON.parse(message);
     switch(data.type) {
@@ -90,7 +87,7 @@ wss.on('connection', (ws) => {
       type: "postUsersOnline",
       usersOnline: wss.clients.size
     };
-    console.log(`one user left, currently ${wss.clients.size} users`);
+    // shows the the number of users online
     wss.broadcast(data, ws);
     console.log('Client disconnected')});
 });

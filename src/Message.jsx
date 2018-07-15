@@ -1,16 +1,6 @@
 import React, {Component} from 'react';
 
-const imageUrlTest = /https?:\/\/.*\.(?:png|jpg|gif)/;
-// what.test("str");
-
-
-// (
-//         <div className="message">
-//         <span className="message-username" style={{color: this.props.userColour}}>{this.props.username}</span>
-//         <span className="message-content">{this.props.content}</span>
-//         </div>
-//         );
-
+const imageUrlTest = /https?:\/\/.*\.(?:png|jpg|gif)/; // regular expression to check for images
 
 class Message extends Component {
 
@@ -33,6 +23,7 @@ class Message extends Component {
     return filtering.test(word);
   }
 
+  // separates the message content in an array sorted by elemtnts that contain words and elements that contain image urls
   newContent(content, filter) {
     const splitMessage = content.split(" ");
     const condensedMessage = [];
@@ -50,7 +41,6 @@ class Message extends Component {
         // concat onto old string
         condensedMessage[currentIndex] = condensedMessage[currentIndex] + " " + splitMessage[i];
       }
-
     }
     return condensedMessage;
   }
@@ -67,7 +57,6 @@ class Message extends Component {
         );
     });
 
-    // {this.newCentent(this.props.content)}
     switch(this.props.type) {
       case "incomingMessage":
       return (
