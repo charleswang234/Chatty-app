@@ -4,8 +4,8 @@ Chatty is a single-page chat app that uses ReactJS, HTML5, CSS, and JS in the fr
 
 ## Final Product
 
-!["Screenshot of Chatty page"](Chatty-app/docs/start.png)
-!["Screenshot of Tweeter page after changing username"](Chatty-app/docs/withMessages.png)
+!["Screenshot of Chatty page"](https://github.com/charleswang234/Chatty-app/blob/master/docs/start.png)
+!["Screenshot of Messages"](https://github.com/charleswang234/Chatty-app/blob/master/docs/withMessages.png)
 
 ## Getting Started
 
